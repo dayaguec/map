@@ -181,6 +181,8 @@ bool AdMapFactory::isDrivableLane(lane::LaneType laneType) const
     case lane::LaneType::NORMAL:
     case lane::LaneType::MULTI:
     case lane::LaneType::TURN:
+    case lane::LaneType::ENTRY:
+    case lane::LaneType::EXIT:
     case lane::LaneType::INTERSECTION:
       return true;
     default:

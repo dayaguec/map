@@ -50,7 +50,7 @@ find_library(PROJ_LIBRARIES
   NAMES proj
 )
 find_path(PROJ_INCLUDE_DIR
-  NAMES proj_api.h
+  NAMES proj.h
 )
 list(APPEND ad_map_opendrive_reader_TARGET_INCLUDE_DIRECTORIES ${PROJ_INCLUDE_DIR})
 list(APPEND ad_map_opendrive_reader_TARGET_LINK_LIBRARIES ${PROJ_LIBRARIES})

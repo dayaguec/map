@@ -18,8 +18,7 @@
 #include "opendrive/geometry/LaneSectionSampling.hpp"
 #include "opendrive/geometry/LaneUtils.hpp"
 
-#define ACCEPT_USE_OF_DEPRECATED_PROJ_API_H
-#include <proj_api.h>
+#include <proj.h>
 
 namespace opendrive {
 namespace geometry {
@@ -946,7 +945,7 @@ bool checkLaneConsistency(opendrive::OpenDriveData &mapData)
 
 bool convertToGeoPoints(opendrive::OpenDriveData &mapData)
 {
-  auto projPtr = pj_init_plus(mapData.geoReference.projection.c_str());
+  auto projPtr = proj_create(0, mapData.geoReference.projection.c_str());
   if (projPtr == nullptr)
   {
     if (std::isnan(mapData.geoReference.longitude) || std::isnan(mapData.geoReference.latitude))
@@ -956,7 +955,7 @@ bool convertToGeoPoints(opendrive::OpenDriveData &mapData)
 
     std::string defaultProjection = "+proj=tmerc +ellps=WGS84 +lon_0=" + std::to_string(mapData.geoReference.longitude)
       + " +lat_0=" + std::to_string(mapData.geoReference.latitude);
-    projPtr = pj_init_plus(defaultProjection.c_str());
+    projPtr = proj_create(0, defaultProjection.c_str());
     spdlog::error("Using default projection: {}", defaultProjection);
     if (projPtr == nullptr)
     {
@@ -971,17 +970,17 @@ bool convertToGeoPoints(opendrive::OpenDriveData &mapData)
       spdlog::error("ConvertENUToGeo: Input point invalid {}, {}", point.x, point.y);
     }
     point.ensureValid();
-    projXY enuPoint;
-    enuPoint.u = point.x;
-    enuPoint.v = point.y;
+    PJ_COORD enuPoint;
+    enuPoint.uv.u = point.x;
+    enuPoint.uv.v = point.y;
 
-    auto geoPoint = pj_inv(enuPoint, projPtr);
-    point.x = geoPoint.u * RAD_TO_DEG;
-    point.y = geoPoint.v * RAD_TO_DEG;
+    auto geoPoint = proj_trans(projPtr, PJ_INV, enuPoint);
+    point.x = geoPoint.uv.u * 57.295779513082321;
+    point.y = geoPoint.uv.v * 57.295779513082321;
     if (!point.isValid())
     {
       spdlog::error(
-        "ConvertENUToGeo: Output point invalid ({},{}) -> ({},{})", enuPoint.u, enuPoint.v, geoPoint.u, geoPoint.v);
+        "ConvertENUToGeo: Output point invalid ({},{}) -> ({},{})", enuPoint.uv.u, enuPoint.uv.v, geoPoint.uv.u, geoPoint.uv.v);
     }
     point.ensureValid();
   };
@@ -1013,7 +1012,7 @@ bool convertToGeoPoints(opendrive::OpenDriveData &mapData)
     convertENUToGeo(element.second.position);
   }
 
-  pj_dalloc(projPtr);
+  proj_destroy(projPtr);
   return true;
 }
 

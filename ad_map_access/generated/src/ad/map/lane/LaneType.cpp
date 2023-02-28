@@ -42,6 +42,10 @@ std::string toString(::ad::map::lane::LaneType const e)
       return std::string("::ad::map::lane::LaneType::OVERTAKING"); // LCOV_EXCL_BR_LINE
     case ::ad::map::lane::LaneType::TURN:
       return std::string("::ad::map::lane::LaneType::TURN"); // LCOV_EXCL_BR_LINE
+    case ::ad::map::lane::LaneType::ENTRY:
+      return std::string("::ad::map::lane::LaneType::ENTRY"); // LCOV_EXCL_BR_LINE
+    case ::ad::map::lane::LaneType::EXIT:
+      return std::string("::ad::map::lane::LaneType::EXIT"); // LCOV_EXCL_BR_LINE
     case ::ad::map::lane::LaneType::BIKE:
       return std::string("::ad::map::lane::LaneType::BIKE"); // LCOV_EXCL_BR_LINE
     default:
@@ -130,6 +134,22 @@ template <>::ad::map::lane::LaneType fromString(std::string const &str)
   if (str == std::string("TURN")) // LCOV_EXCL_BR_LINE
   {
     return ::ad::map::lane::LaneType::TURN;
+  }
+  if (str == std::string("::ad::map::lane::LaneType::ENTRY")) // LCOV_EXCL_BR_LINE
+  {
+    return ::ad::map::lane::LaneType::ENTRY;
+  }
+  if (str == std::string("ENTRY")) // LCOV_EXCL_BR_LINE
+  {
+    return ::ad::map::lane::LaneType::ENTRY;
+  }
+  if (str == std::string("::ad::map::lane::LaneType::EXIT")) // LCOV_EXCL_BR_LINE
+  {
+    return ::ad::map::lane::LaneType::EXIT;
+  }
+  if (str == std::string("EXIT")) // LCOV_EXCL_BR_LINE
+  {
+    return ::ad::map::lane::LaneType::EXIT;
   }
   if (str == std::string("::ad::map::lane::LaneType::BIKE")) // LCOV_EXCL_BR_LINE
   {

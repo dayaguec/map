@@ -11,9 +11,8 @@
 
 #pragma once
 
-#define ACCEPT_USE_OF_DEPRECATED_PROJ_API_H
 #include <memory>
-#include <proj_api.h>
+#include <proj.h>
 #include <vector>
 #include "ad/map/point/Types.hpp"
 
@@ -259,7 +258,7 @@ private:                     // ENU Conversion parameters
   double enu_sp_2_;          ///< ENU computation temp value.
   double ecef_enu_[9];       ///< ENU/ECEF conversion matrix.
 
-  projPJ projPtr_; ///< proj object to be used for ENU conversion. In case of OpenDrive import ENU conversions have to
+  PJ *projPtr_; ///< proj object to be used for ENU conversion. In case of OpenDrive import ENU conversions have to
                    ///< use the exact projection string provided with the map.
 
   ///< is ENU conversion configured via projection string

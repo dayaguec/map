@@ -85,7 +85,15 @@ enum class LaneType : int32_t
   /*!
    BIKE
    */
-  BIKE = 10
+  BIKE = 10,
+    /*!
+   ENTRY
+   */
+  ENTRY = 11,
+    /*!
+   EXIT
+   */
+  EXIT = 12
 };
 
 } // namespace lane

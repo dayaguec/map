@@ -40,7 +40,8 @@ inline bool withinValidInputRange(::ad::map::lane::LaneType const &input, bool c
     || (input == ::ad::map::lane::LaneType::INTERSECTION) || (input == ::ad::map::lane::LaneType::SHOULDER)
     || (input == ::ad::map::lane::LaneType::EMERGENCY) || (input == ::ad::map::lane::LaneType::MULTI)
     || (input == ::ad::map::lane::LaneType::PEDESTRIAN) || (input == ::ad::map::lane::LaneType::OVERTAKING)
-    || (input == ::ad::map::lane::LaneType::TURN) || (input == ::ad::map::lane::LaneType::BIKE);
+    || (input == ::ad::map::lane::LaneType::TURN) || (input == ::ad::map::lane::LaneType::EXIT)
+    || (input == ::ad::map::lane::LaneType::ENTRY) || (input == ::ad::map::lane::LaneType::BIKE);
   if (!inValidInputRange && logErrors)
   {
     spdlog::error("withinValidInputRange(::ad::map::lane::LaneType)>> {}, raw value: {} ",

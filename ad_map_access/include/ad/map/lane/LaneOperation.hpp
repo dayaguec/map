@@ -200,7 +200,7 @@ inline bool isLaneDirectionNegative(Lane const &lane)
 inline bool isRouteable(Lane const &lane)
 {
   return lane.type == LaneType::INTERSECTION || lane.type == LaneType::MULTI || lane.type == LaneType::NORMAL
-    || lane.type == LaneType::TURN;
+    || lane.type == LaneType::TURN || lane.type == LaneType::EXIT || lane.type == LaneType::ENTRY;
 }
 
 /**

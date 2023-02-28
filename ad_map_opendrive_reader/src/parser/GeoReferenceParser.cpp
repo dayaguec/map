@@ -18,8 +18,7 @@
 #include <limits>
 #include <vector>
 
-#define ACCEPT_USE_OF_DEPRECATED_PROJ_API_H
-#include <proj_api.h>
+#include <proj.h>
 
 namespace opendrive {
 namespace parser {
@@ -30,16 +29,16 @@ namespace parser {
     std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN(), 0.0, ""};
   result.projection = geo_reference_string;
 
-  auto projPtr = pj_init_plus(geo_reference_string.c_str());
+  auto projPtr = proj_create(0, geo_reference_string.c_str());
 
   if (projPtr != nullptr)
   {
-    projXY refPoint;
-    refPoint.u = 0;
-    refPoint.v = 0;
-    const auto geoPoint = pj_inv(refPoint, projPtr);
-    result.longitude = geoPoint.u * RAD_TO_DEG;
-    result.latitude = geoPoint.v * RAD_TO_DEG;
+    PJ_COORD refPoint;
+    refPoint.uv.u = 0;
+    refPoint.uv.v = 0;
+    const auto geoPoint = proj_trans(projPtr, PJ_INV, refPoint);
+    result.longitude = geoPoint.uv.u * 57.295779513082321;
+    result.latitude = geoPoint.uv.v * 57.295779513082321;
   }
   else
   {

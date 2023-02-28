@@ -42,7 +42,7 @@ CoordinateTransform::~CoordinateTransform()
 {
   if (projPtr_ != nullptr)
   {
-    pj_dalloc(projPtr_);
+    proj_destroy(projPtr_);
     projPtr_ = nullptr;
   }
 }
@@ -51,10 +51,10 @@ bool CoordinateTransform::setGeoProjection(std::string const &geo_projection)
 {
   if (projPtr_ != nullptr)
   {
-    pj_dalloc(projPtr_);
+    proj_destroy(projPtr_);
     projPtr_ = nullptr;
   }
-  projPtr_ = pj_init_plus(geo_projection.c_str());
+  projPtr_ = proj_create(0, geo_projection.c_str());
   if (projPtr_ != nullptr)
   {
     enu_ref_++;
@@ -143,12 +143,13 @@ ENUPoint CoordinateTransform::Geo2ENU(const GeoPoint &pt) const
     {
       if (isGeoProjectionValid())
       {
-        projXY pjGeoPoint;
-        pjGeoPoint.u = toRadians(pt.longitude);
-        pjGeoPoint.v = toRadians(pt.latitude);
+        PJ_COORD pjGeoPoint;
+        pjGeoPoint.uv.u = toRadians(pt.longitude);
+        pjGeoPoint.uv.v = toRadians(pt.latitude);
 
-        auto pjEnuPoint = pj_fwd(pjGeoPoint, projPtr_);
-        return createENUPoint(pjEnuPoint.u, pjEnuPoint.v, static_cast<double>(pt.altitude));
+        auto pjEnuPoint = proj_trans(projPtr_, PJ_FWD, pjGeoPoint);
+        return createENUPoint(pjEnuPoint.uv.u, pjEnuPoint.uv.v,
+          static_cast<double>(pt.altitude));
       }
       else
       {
@@ -187,13 +188,13 @@ GeoPoint CoordinateTransform::ENU2Geo(const ENUPoint &pt) const
     {
       if (isGeoProjectionValid())
       {
-        projXY pjEnuPoint;
-        pjEnuPoint.u = static_cast<double>(pt.x);
-        pjEnuPoint.v = static_cast<double>(pt.y);
+        PJ_COORD pjEnuPoint;
+        pjEnuPoint.uv.u = static_cast<double>(pt.x);
+        pjEnuPoint.uv.v = static_cast<double>(pt.y);
 
-        auto pjGeoPoint = pj_inv(pjEnuPoint, projPtr_);
-        return createGeoPoint(Longitude(radians2degree(pjGeoPoint.u)),
-                              Latitude(radians2degree(pjGeoPoint.v)),
+        auto pjGeoPoint = proj_trans(projPtr_, PJ_INV, pjEnuPoint);
+        return createGeoPoint(Longitude(radians2degree(pjGeoPoint.uv.u)),
+                              Latitude(radians2degree(pjGeoPoint.uv.v)),
                               Altitude(static_cast<double>(pt.z)));
       }
       else

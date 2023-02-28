@@ -252,7 +252,9 @@ lane::LaneType toLaneType(::opendrive::LaneType const &laneType)
     case ::opendrive::LaneType::Stop:
       return lane::LaneType::EMERGENCY;
     case ::opendrive::LaneType::Entry:
+      return lane::LaneType::ENTRY;
     case ::opendrive::LaneType::Exit:
+      return lane::LaneType::EXIT;
     case ::opendrive::LaneType::OffRamp:
     case ::opendrive::LaneType::OnRamp:
       return lane::LaneType::TURN;
